@@ -13,6 +13,7 @@ class Queue{
             return null
         }
         const data = this.items[this.front]
+        delete this.items[this.front]
         this.front++;
         return data;
     }
@@ -46,3 +47,4 @@ console.log(queue.dequeue())
 console.log(queue.isEmpty())
 console.log(queue.peek())
 console.log(queue.print())
+console.log(queue)
