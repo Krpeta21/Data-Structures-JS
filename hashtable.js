@@ -1,41 +1,71 @@
 class HashTable{
-    constructor(size){
-        this.buckets = new Array(size)
-        this.numBuckets = this.buckets.length;
-    }
-    hash(key){
-        let total = 0;
-        for (let i = 0; i < key.length; i++) {
-            total+= key.charCodeAt(i);
+   constructor(size){
+    this.table = new Array(size)
+    this.size = size
+   }
+
+   hash(key){
+      let total = 0
+      for(let i = 0; i<key.length;i++){
+        total+= key.charCodeAt(i)
+      }
+      return total % this.size
+   }
+   set(key,value){
+    const index = this.hash(key)
+    // this.table[index] = value
+    const bucket = this.table[index]
+    if(!bucket){
+        this.table[index] = [[key,value]]
+    }else{
+        const sameKeyItem = bucket.find(item => item[0] === key)
+        if(sameKeyItem){
+            sameKeyItem[1] = value
+        }else{
+            bucket.push([key,value])
         }
-        return total % this.numBuckets;
     }
-    insert(key, value){
-        const index = this.hash(key);
-        if(!this.buckets[index]) this.buckets[index] = []
-        this.buckets[index].push([key,value]);
-    }
-    get(key){
-        const index = this.hash(key);
-        if(!this.buckets[index]) return null;
-        for (let i = 0; i<this.buckets[index].length; i++) {
-            if(this.buckets[index][i][0] === key){
-                return this.buckets[index][i][1]
-            }            
+   }
+   get(key){
+    const index = this.hash(key)
+    // return this.table[index]
+    const bucket = this.table[index]
+    if(bucket){
+        const sameKeyItem = bucket.find(item => item[0] === key)
+        if(sameKeyItem){
+            return sameKeyItem[1]
         }
     }
+    return undefined
+   }
+   remove(key){
+    const index = this.hash(key)
+    // this.table[index] = undefined
+    const bucket = this.table[index]
+    if(bucket){
+        const sameKeyItem = bucket.find(item => item[0] === key)
+        if(sameKeyItem){
+            bucket.splice(bucket.indexOf(sameKeyItem), 1)
+        }
+    }
+   }
+
+   display(){
+    for(let i =0; i<this.table.length; i++){
+        if(this.table[i]){
+            console.log(i, this.table[i])
+        }
+    }
+   }
+
 }
+const table = new HashTable(50)
 
-const hashTable = new HashTable();
-hashTable.insert("carpetsu",{
-    name: 'Irving',
-    age: 22,
-    email: "krpeta@gmail.com"
-})
-hashTable.insert("johnsmith",{
-    name: 'John Smith',
-    age: 20,
-    email: "shadow@gmail.com"
-})
+table.set('name', 'Irving')
+table.set('age', 25)
 
-console.log(hashTable.get('johnsmith'))
+console.log(table.get('name'))
+table.set('mane','Rudeus')
+table.set('name', 'Eris')
+table.remove('mane')
+table.display()
