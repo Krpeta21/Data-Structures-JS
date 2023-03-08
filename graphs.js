@@ -1,28 +1,55 @@
 class Graph {
     constructor(){
-        this.nodes = [];
-        this.adjList = {};
+        this.adjencyList = {}
     }
+    addVertex(vertex){
+        if(!this.adjencyList[vertex]){
+            this.adjencyList[vertex] = new Set()
+        }
+    }
+    addEdge(vertex1, vertex2){
+        if(!this.adjencyList[vertex1]){
+            this.addVertex(vertex1)
+        }
+        if(!this.adjencyList[vertex2]){
+            this.addVertex(vertex2)
+        }
+        this.adjencyList[vertex1].add(vertex2)
+        this.adjencyList[vertex2].add(vertex1)
 
-    addNode(node){
-        this.nodes.push(node);
-        this.adjList[node] = []
     }
-    addEdge(node1,node2){
-        this.adjList[node1].push(node2)
-        this.adjList[node2].push(node1)
+    display(){
+        for(let vertex in this.adjencyList){
+            console.log(vertex + " -> " + [...this.adjencyList[vertex]])
+        }
+    }
+    hasEdge(vertex1,vertex2){
+        return (
+            this.adjencyList[vertex1].has(vertex2) &&
+            this.adjencyList[vertex2].has(vertex1)
+        )
+    }
+    removeEdge(vertex1,vertex2){
+        this.adjencyList[vertex1].delete(vertex2)
+        this.adjencyList[vertex2].delete(vertex1)
+    }
+    removeVertex(vertex){
+        if(!this.adjencyList[vertex]){
+            return
+        }
+        for(let adjencyVertex of this.adjencyList[vertex]){
+            this.removeEdge(vertex,adjencyVertex)
+        }
+        delete this.adjencyList[vertex]
     }
 }
 const graph = new Graph()
-graph.addNode("A")
-graph.addNode("B")
-graph.addNode("C")
-graph.addNode("D")
-graph.addNode("E")
-
-graph.addEdge("A", "B")
-graph.addEdge("A", "C")
-graph.addEdge("B", "D")
-graph.addEdge("C", "E")
-
-console.log(graph.adjList)
+graph.addVertex('A')
+graph.addVertex('B')
+graph.addVertex('C')
+graph.addEdge('A','B')
+graph.addEdge('B','C')
+graph.display()
+console.log(graph.hasEdge('A','C'))
+graph.removeVertex('B')
+graph.display()
