@@ -178,17 +178,4 @@ class LinkedList{
     
 }
 
-const list = new LinkedList()
-
-list.append(1)
-list.append(2)
-list.append(3)
-list.append(4)
-list.prepend(0)
-
-list.reverse()
-list.print()
-list.removeFromEnd()
-
-
-list.print()
+module.exports = LinkedList
